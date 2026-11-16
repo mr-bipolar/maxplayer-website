@@ -2321,7 +2321,7 @@ img {
 /* Channel Grid & Cards */
 .channel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: 18px;
   margin-bottom: 50px;
 }
@@ -2330,13 +2330,15 @@ img {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   position: relative;
+  min-width: 0; /* prevent grid blowout */
+  overflow: hidden;
 }
 
 .channel-card:hover {
@@ -2385,13 +2387,14 @@ img {
 
 .card-channel-name {
   font-family: var(--display);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
   margin: 0 0 6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .card-badges {
@@ -2428,6 +2431,8 @@ img {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .url-label {
@@ -2473,6 +2478,8 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -2481,6 +2488,7 @@ img {
 .edit-delete-btns {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .btn-card-action {
@@ -2496,6 +2504,7 @@ img {
   align-items: center;
   gap: 5px;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .btn-card-action:hover:not(:disabled) {
@@ -2945,6 +2954,7 @@ img {
   /* Explicit height so the control bar always has room */
   aspect-ratio: 16 / 9;
   overflow: hidden;
+  width: 100%;
 }
 
 .vp-player-wrap .video-js {
@@ -2953,6 +2963,22 @@ img {
   width: 100% !important;
   height: 100% !important;
   border-radius: 0;
+}
+
+/* Cancel VJS fluid mode's own padding-top trick — we control sizing via aspect-ratio */
+.vp-player-wrap .video-js.vjs-fluid,
+.vp-player-wrap .video-js.vjs-responsive {
+  padding-top: 0 !important;
+  height: 100% !important;
+}
+
+/* Video element itself must fill the container */
+.vp-player-wrap .video-js video {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
 }
 
 /* Loading State — matches site's amber dot aesthetic */
@@ -3315,6 +3341,7 @@ img {
   transition: transform 0.22s ease;
 }
 
+/* Show play overlay on hover (desktop) */
 .card-play-btn:hover .card-play-icon-wrap,
 .card-play-btn:focus-visible .card-play-icon-wrap {
   opacity: 1;
@@ -3327,6 +3354,19 @@ img {
 .card-play-btn:hover .card-logo-img {
   transform: scale(1.04);
   opacity: 0.85;
+}
+
+/* Always show play icon on touch devices (no hover available) */
+@media (hover: none) {
+  .card-play-icon-wrap {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.35);
+  }
+  .card-play-icon {
+    transform: scale(1);
+    width: 36px;
+    height: 36px;
+  }
 }
 
 /* Stack card info below the play area */
@@ -3872,38 +3912,84 @@ img {
     gap: 10px;
   }
 
-  /* Channel card: single column already set above;
-     also reduce the logo thumbnail height */
+  /* ======================================================
+     CHANNEL CARDS — mobile fixes (≤650px)
+     ====================================================== */
+
+  /* Single column, full-width */
+  .channel-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .channel-card {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  /* Logo thumbnail shorter on mobile */
   .card-logo-wrap-play {
-    height: 80px;
+    height: 72px;
+    border-radius: 8px;
+    margin-bottom: 8px;
   }
 
-  /* Card footer action row: wrap so buttons don't overflow */
-  .card-footer-actions {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .reorder-btns {
-    flex-shrink: 0;
-  }
-  .edit-delete-btns {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .btn-card-action {
-    flex: 1;
-    min-width: 60px;
-    justify-content: center;
+  .card-play-icon {
+    width: 32px;
+    height: 32px;
   }
 
-  /* Raw code block: smaller font so it doesn't overflow */
-  .raw-code-block {
+  /* Channel name slightly smaller */
+  .card-channel-name {
+    font-size: 14px;
+  }
+
+  /* Badges smaller */
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  /* URL box: truncate properly */
+  .card-url-wrap {
+    padding: 6px 10px;
+  }
+  .url-text {
     font-size: 11px;
   }
 
-  /* Category filter pills: horizontal scroll on mobile */
+  /* Footer: reorder on left, play+edit+delete on right, all wrap */
+  .card-footer-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-start;
+  }
+  .reorder-btns {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .edit-delete-btns {
+    display: flex;
+    flex: 1;
+    gap: 4px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .btn-card-action {
+    padding: 5px 8px;
+    font-size: 11.5px;
+    gap: 4px;
+  }
+
+  /* Raw code block: smaller font */
+  .raw-code-block {
+    font-size: 11px;
+    overflow-x: auto;
+  }
+
+  /* Category filter pills: horizontal scroll */
   .category-filter-pills {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -3922,63 +4008,120 @@ img {
      VIDEO PLAYER MODAL — mobile fixes (≤650px)
      ====================================================== */
 
-  /* Full-screen modal on mobile */
+  /* True full-screen on mobile — no backdrop gap */
   .vp-overlay {
     padding: 0;
-    align-items: flex-end;
-  }
-  .vp-modal {
-    width: 100%;
-    max-height: 100dvh;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    border-bottom: none;
+    align-items: stretch;
+    justify-content: flex-end;
   }
 
-  /* Compact header */
+  /* Full-screen bottom sheet */
+  .vp-modal {
+    width: 100%;
+    height: 100%;
+    max-height: 100dvh;
+    max-height: 100vh; /* fallback for older Safari */
+    border-radius: 0;
+    border: none;
+    animation: modalSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  @keyframes modalSlideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  /* Compact sticky header */
   .vp-header {
     padding: 10px 14px;
     gap: 8px;
+    min-height: 52px;
+  }
+  .vp-header-info {
+    gap: 10px;
+    min-width: 0;
+    overflow: hidden;
   }
   .vp-header-logo-wrap {
     width: 36px;
     height: 36px;
+    flex-shrink: 0;
+  }
+  .vp-now-playing-label {
+    font-size: 9px;
+    margin-bottom: 2px;
   }
   .vp-channel-title {
     font-size: 14px;
-    max-width: calc(100vw - 140px);
+    max-width: calc(100vw - 100px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .vp-category-badge {
-    display: none; /* hide on tiny screens to save space */
+    display: none;
   }
   .vp-close-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
   }
 
-  /* Player area fills full width */
+  /* Video: fixed 16:9 based on actual screen width */
   .vp-player-wrap {
     width: 100%;
     aspect-ratio: 16 / 9;
+    min-height: unset;
+    flex-shrink: 0;
   }
 
-  /* Footer URL row: wrap the long URL */
-  .vp-footer {
+  /* Make sure VJS fills its container absolutely */
+  .vp-player-wrap .video-js {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Bigger tap targets on the control bar */
+  .vjs-maxplayer-theme .vjs-control-bar {
+    height: 46px;
+    padding: 0 6px;
+  }
+  .vjs-maxplayer-theme .vjs-button {
+    min-width: 40px;
+    width: 40px;
+  }
+  .vjs-maxplayer-theme .vjs-time-control {
+    padding: 0 4px;
+    font-size: 11px;
+    min-width: 32px;
+  }
+  .vjs-maxplayer-theme .vjs-progress-control {
+    min-width: 0;
+    flex: 1;
+  }
+  .vjs-maxplayer-theme .vjs-big-play-button {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 24px;
+  }
+
+  /* Subtitle panel — flush, full-width */
+  .vp-subtitle-panel {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  .vp-subtitle-header {
     padding: 10px 14px;
   }
-  .vp-url-row {
-    flex-wrap: wrap;
-    gap: 6px;
+  .vp-subtitle-body {
+    padding: 12px 14px;
   }
-  .vp-url-text {
-    flex-basis: 100%;
-    font-size: 11px;
-  }
-  .vp-hint-row {
-    font-size: 11px;
-  }
-
-  /* Subtitle panel: full-width tabs */
   .vp-subtitle-source-tabs {
     gap: 4px;
   }
@@ -3986,7 +4129,8 @@ img {
     flex: 1;
     text-align: center;
     font-size: 12px;
-    padding: 7px 8px;
+    padding: 6px 4px;
+    white-space: nowrap;
   }
   .vp-sub-lang-row {
     flex-wrap: wrap;
@@ -4000,6 +4144,42 @@ img {
     width: 100%;
     justify-content: center;
   }
+  .vp-sub-upload-label {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  /* Footer — compact, URL wraps to new line */
+  .vp-footer {
+    padding: 10px 14px 16px;
+  }
+  .vp-url-row {
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .vp-url-label {
+    flex-shrink: 0;
+    font-size: 9px;
+  }
+  .vp-url-text {
+    font-size: 11px;
+    min-width: 0;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .vp-copy-url-btn {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  .vp-hint-row {
+    font-size: 11px;
+    line-height: 1.4;
+  }
 
   /* ======================================================
      IMPORT URL MODAL — mobile fixes (≤650px)
@@ -4011,7 +4191,8 @@ img {
   .modal-box {
     width: 100%;
     max-height: 92dvh;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 92vh; /* fallback */
+    border-radius: 20px 20px 0 0;
     border-bottom: none;
     padding: 22px 18px;
   }
@@ -4031,27 +4212,96 @@ img {
   }
 }
 
+/* ---- Landscape phone — player fills screen height ---- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .vp-overlay {
+    padding: 0;
+    align-items: stretch;
+  }
+  .vp-modal {
+    width: 100%;
+    height: 100%;
+    max-height: 100dvh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .vp-player-wrap {
+    aspect-ratio: unset;
+    flex: 1;
+    min-height: 0;
+  }
+  .vp-header {
+    padding: 6px 12px;
+    min-height: auto;
+  }
+  .vp-footer {
+    padding: 6px 12px 8px;
+  }
+  .vp-subtitle-panel {
+    overflow-y: auto;
+  }
+  /* Slim control bar in landscape */
+  .vjs-maxplayer-theme .vjs-control-bar {
+    height: 38px;
+  }
+}
+
 /* ---- Very small phones (≤400px) ---- */
 @media (max-width: 400px) {
   .creator-hero h1 {
     font-size: 26px;
   }
+
+  /* Cards even more compact */
+  .channel-card {
+    padding: 12px;
+  }
+  .card-logo-wrap-play {
+    height: 60px;
+  }
+  .card-channel-name {
+    font-size: 13px;
+  }
+  .btn-card-action {
+    padding: 4px 7px;
+    font-size: 11px;
+  }
+
+  /* VJS: ultra-compact control bar */
   .vjs-maxplayer-theme .vjs-control-bar {
     height: 40px;
-    padding: 0 4px;
+    padding: 0 2px;
+  }
+  .vjs-maxplayer-theme .vjs-button {
+    min-width: 36px;
+    width: 36px;
   }
   .vjs-maxplayer-theme .vjs-big-play-button {
-    width: 54px;
-    height: 54px;
-    line-height: 54px;
-    font-size: 22px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+  }
+  /* Hide time display to save bar space on tiny phones */
+  .vjs-maxplayer-theme .vjs-time-control {
+    display: none;
+  }
+
+  /* Player header: hide logo, tighten up */
+  .vp-header-logo-wrap {
+    display: none;
   }
   .vp-channel-title {
     font-size: 13px;
+    max-width: calc(100vw - 70px);
   }
+
   .cat-pill {
-    font-size: 11.5px;
-    padding: 5px 10px;
+    font-size: 11px;
+    padding: 4px 10px;
   }
 }
 
