@@ -638,9 +638,10 @@
         controls: true,
         autoplay: true,
         preload: "auto",
-        fluid: true,
+        fill: true,
         responsive: true,
         liveui: true,
+        inactivityTimeout: 3500,
         html5: {
           vhs: {
             overrideNative: true,
@@ -652,9 +653,28 @@
           nativeTextTracks: false,
         },
         userActions: {
-          hotkeys: true
+          hotkeys: true,
+          click: true,
+          doubleClick: true
         }
       });
+
+      // Tap / click anywhere on the video area to wake up or toggle controls (critical for mobile)
+      const playerWrap = document.querySelector(".vp-player-wrap");
+      if (playerWrap && !playerWrap.dataset.hasTapWake) {
+        playerWrap.dataset.hasTapWake = "true";
+        const wakeControls = (e) => {
+          if (e.target && e.target.closest(".vjs-control-bar")) return;
+          if (!vjsPlayer) return;
+          if (vjsPlayer.userActive()) {
+            // If already active on touch, user can tap to hide or let timeout hide
+            vjsPlayer.userActive(false);
+          } else {
+            vjsPlayer.userActive(true);
+          }
+        };
+        playerWrap.addEventListener("click", wakeControls);
+      }
 
       vjsPlayer.on("ready", () => {
         if (vpLoadingState) vpLoadingState.style.display = "none";

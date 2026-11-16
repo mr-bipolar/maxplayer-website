@@ -2239,7 +2239,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 22px;
   flex-wrap: wrap;
 }
@@ -2247,7 +2247,7 @@ img {
 .search-input-wrap {
   position: relative;
   flex: 1;
-  min-width: 260px;
+  min-width: min(260px, 100%);
   max-width: 480px;
   display: flex;
   align-items: center;
@@ -2290,21 +2290,29 @@ img {
 
 .category-filter-pills {
   display: flex;
-  gap: 8px;
+  gap: 8px 6px;
   flex-wrap: wrap;
   align-items: center;
+  flex: 1;
+  min-width: 0;
 }
 
 .cat-pill {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
-  padding: 6px 14px;
+  padding: 7px 15px;
   border-radius: 100px;
   background: var(--card);
   border: 1px solid var(--line);
   color: var(--dim);
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  user-select: none;
 }
 
 .cat-pill:hover {
@@ -2698,31 +2706,37 @@ img {
 
 /* Control bar base — always rendered, fades when inactive during playback */
 .vjs-maxplayer-theme .vjs-control-bar {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
   display: flex !important;   /* never collapse the bar */
   visibility: visible !important;
-  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
-  z-index: 20;
+  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 65%, transparent 100%) !important;
+  z-index: 25 !important;
   height: 48px;
   padding: 0 8px;
   align-items: center;
   opacity: 1;                 /* default visible — no !important so lower rules can override */
-  transition: opacity 0.2s ease;
+  transition: opacity 0.25s ease;
   pointer-events: auto;
 }
 
-/* Auto-hide: fade out after 1.5 s of inactivity while playing */
+/* Auto-hide: fade out after inactivity while playing */
 .vjs-maxplayer-theme.vjs-user-inactive.vjs-playing .vjs-control-bar {
   opacity: 0;
   pointer-events: none;       /* clicks pass through to the video when hidden */
-  transition: opacity 0.6s ease 1.5s;
+  transition: opacity 0.5s ease 1s;
 }
 
-/* Snap back immediately when user moves / pauses */
+/* Snap back immediately when user moves / pauses / touches */
 .vjs-maxplayer-theme.vjs-user-active .vjs-control-bar,
 .vjs-maxplayer-theme.vjs-paused .vjs-control-bar {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 0.2s ease;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transition: opacity 0.15s ease !important;
 }
 
 /* Big play button */
@@ -3871,9 +3885,15 @@ img {
   .grid-filter-bar {
     flex-direction: column;
     align-items: stretch;
+    gap: 8px;
   }
   .search-input-wrap {
+    min-width: 0;
     max-width: 100%;
+    width: 100%;
+  }
+  .category-filter-pills {
+    width: 100%;
   }
 
   /* ======================================================
@@ -3919,266 +3939,344 @@ img {
   /* Single column, full-width */
   .channel-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
   }
 
   .channel-card {
-    padding: 14px;
-    gap: 10px;
+    padding: 16px;
+    gap: 12px;
   }
 
-  /* Logo thumbnail shorter on mobile */
+  /* Logo thumbnail clean 80px on mobile */
   .card-logo-wrap-play {
-    height: 72px;
+    height: 80px;
     border-radius: 8px;
     margin-bottom: 8px;
   }
 
   .card-play-icon {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
   }
 
-  /* Channel name slightly smaller */
+  /* Channel name clear and readable */
   .card-channel-name {
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 700;
   }
 
-  /* Badges smaller */
+  /* Badges readable */
   .badge {
-    font-size: 10px;
-    padding: 2px 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 3px 8px;
   }
 
-  /* URL box: truncate properly */
+  /* URL box: readable and clean */
   .card-url-wrap {
-    padding: 6px 10px;
+    padding: 8px 12px;
+  }
+  .url-label {
+    font-size: 11px;
+    font-weight: 700;
   }
   .url-text {
-    font-size: 11px;
+    font-size: 12.5px;
   }
 
-  /* Footer: reorder on left, play+edit+delete on right, all wrap */
+  /* Footer: reorder on left, play+edit+delete on right, touch-friendly */
   .card-footer-actions {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 6px;
-    justify-content: flex-start;
+    gap: 8px;
+    justify-content: space-between;
   }
   .reorder-btns {
     display: flex;
-    gap: 4px;
+    gap: 6px;
     flex-shrink: 0;
   }
   .edit-delete-btns {
     display: flex;
     flex: 1;
-    gap: 4px;
+    gap: 6px;
     justify-content: flex-end;
     flex-wrap: wrap;
   }
   .btn-card-action {
-    padding: 5px 8px;
-    font-size: 11.5px;
-    gap: 4px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 5px;
+    min-height: 36px;
+  }
+  .btn-play-sm {
+    font-size: 13px;
+    font-weight: 700;
   }
 
-  /* Raw code block: smaller font */
-  .raw-code-block {
-    font-size: 11px;
-    overflow-x: auto;
-  }
-
-  /* Category filter pills: horizontal scroll */
+  /* Category filter pills: responsive wrapping pills */
   .category-filter-pills {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-  .category-filter-pills::-webkit-scrollbar {
-    display: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 6px;
+    width: 100%;
+    padding: 2px 0;
   }
   .cat-pill {
-    white-space: nowrap;
-    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 14px;
+    min-height: 36px;
+  }
+
+  /* Raw code block */
+  .raw-code-block {
+    font-size: 12px;
+    overflow-x: auto;
   }
 
   /* ======================================================
-     VIDEO PLAYER MODAL — mobile fixes (≤650px)
+     VIDEO PLAYER MODAL — responsive mobile (≤650px)
      ====================================================== */
 
-  /* True full-screen on mobile — no backdrop gap */
+  /* Centered popup with dark blurred backdrop */
   .vp-overlay {
-    padding: 0;
-    align-items: stretch;
-    justify-content: flex-end;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Full-screen bottom sheet */
+  /* Modal card: responsive, elegant corners, fits screen height */
   .vp-modal {
     width: 100%;
-    height: 100%;
-    max-height: 100dvh;
-    max-height: 100vh; /* fallback for older Safari */
-    border-radius: 0;
-    border: none;
-    animation: modalSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow-y: auto;
+    max-width: 580px;
+    max-height: 94vh;
+    max-height: 94dvh;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
     overflow-x: hidden;
+    overflow-y: auto;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85);
+    animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  @keyframes modalSlideUp {
-    from { transform: translateY(100%); }
-    to   { transform: translateY(0); }
-  }
-
-  /* Compact sticky header */
+  /* ── Header ─────────────────────── */
   .vp-header {
-    padding: 10px 14px;
-    gap: 8px;
-    min-height: 52px;
+    padding: 12px 16px;
+    gap: 12px;
+    flex-shrink: 0;
+    background: var(--bg1);
+    border-bottom: 1px solid var(--line);
   }
   .vp-header-info {
     gap: 10px;
     min-width: 0;
     overflow: hidden;
+    flex: 1;
   }
   .vp-header-logo-wrap {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     flex-shrink: 0;
   }
   .vp-now-playing-label {
-    font-size: 9px;
+    font-size: 11px;
+    font-weight: 700;
     margin-bottom: 2px;
+    letter-spacing: 0.08em;
   }
   .vp-channel-title {
-    font-size: 14px;
-    max-width: calc(100vw - 100px);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .vp-category-badge {
-    display: none;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    max-width: calc(100vw - 120px);
   }
   .vp-close-btn {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
     flex-shrink: 0;
   }
 
-  /* Video: fixed 16:9 based on actual screen width */
+  /* ── Video area ──────────────────── */
   .vp-player-wrap {
     width: 100%;
     aspect-ratio: 16 / 9;
-    min-height: unset;
     flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    background: #000;
   }
 
-  /* Make sure VJS fills its container absolutely */
+  /* VJS elements fill wrapper completely */
   .vp-player-wrap .video-js {
-    position: absolute;
-    inset: 0;
+    position: absolute !important;
+    inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
+    font-size: 14px !important;
   }
 
-  /* Bigger tap targets on the control bar */
+  /* ── Control bar: full width, bottom anchored, touch targets ──── */
   .vjs-maxplayer-theme .vjs-control-bar {
-    height: 46px;
-    padding: 0 6px;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 50px !important;
+    padding: 0 6px !important;
+    font-size: 14px !important;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 65%, transparent 100%) !important;
+    z-index: 30 !important;
+    display: flex !important;
+    visibility: visible !important;
   }
   .vjs-maxplayer-theme .vjs-button {
-    min-width: 40px;
-    width: 40px;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 100% !important;
   }
-  .vjs-maxplayer-theme .vjs-time-control {
-    padding: 0 4px;
-    font-size: 11px;
-    min-width: 32px;
+  .vjs-maxplayer-theme .vjs-button .vjs-icon-placeholder:before {
+    font-size: 20px !important;
+    line-height: 50px !important;
+  }
+  .vjs-maxplayer-theme .vjs-current-time,
+  .vjs-maxplayer-theme .vjs-duration,
+  .vjs-maxplayer-theme .vjs-time-divider {
+    display: flex !important;
+    align-items: center !important;
+    font-size: 13px !important;
+    font-family: var(--font-mono, monospace) !important;
+    padding: 0 4px !important;
+    min-width: auto !important;
+    line-height: 1 !important;
+    color: #e2e8f0 !important;
   }
   .vjs-maxplayer-theme .vjs-progress-control {
-    min-width: 0;
-    flex: 1;
+    flex: 1 !important;
+    min-width: 50px !important;
+    align-items: center !important;
+    padding: 0 6px !important;
+  }
+  .vjs-maxplayer-theme .vjs-progress-holder {
+    height: 6px !important;
+    border-radius: 3px !important;
+  }
+  .vjs-maxplayer-theme .vjs-play-progress {
+    border-radius: 3px !important;
   }
   .vjs-maxplayer-theme .vjs-big-play-button {
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    font-size: 24px;
+    width: 60px !important;
+    height: 60px !important;
+    line-height: 60px !important;
+    font-size: 26px !important;
   }
 
-  /* Subtitle panel — flush, full-width */
+  /* ── Subtitle panel ─────────────── */
   .vp-subtitle-panel {
-    border-radius: 0;
     border-left: none;
     border-right: none;
+    flex-shrink: 0;
   }
   .vp-subtitle-header {
-    padding: 10px 14px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  .vp-subtitle-header-left span {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .vp-subtitle-active-badge {
+    font-size: 11px;
+    padding: 2px 7px;
   }
   .vp-subtitle-body {
-    padding: 12px 14px;
+    padding: 14px 16px 16px;
   }
   .vp-subtitle-source-tabs {
-    gap: 4px;
+    gap: 8px;
+    margin-bottom: 14px;
   }
   .vp-sub-tab {
     flex: 1;
     text-align: center;
-    font-size: 12px;
-    padding: 6px 4px;
-    white-space: nowrap;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 8px;
+    min-height: 38px;
   }
   .vp-sub-lang-row {
     flex-wrap: wrap;
     gap: 8px;
   }
+  .vp-sub-mini-label {
+    font-size: 12.5px;
+  }
   .vp-sub-input-sm {
     min-width: 0;
     flex: 1;
+    font-size: 14px;
+    height: 38px;
   }
   .vp-sub-apply-btn {
     width: 100%;
     justify-content: center;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 40px;
   }
   .vp-sub-upload-label {
-    padding: 12px;
+    padding: 14px;
+    font-size: 13.5px;
+  }
+  .vp-sub-off-hint {
     font-size: 13px;
   }
 
-  /* Footer — compact, URL wraps to new line */
+  /* ── Footer URL bar ─────────────── */
   .vp-footer {
-    padding: 10px 14px 16px;
+    padding: 12px 16px 16px;
+    flex-shrink: 0;
+    background: var(--bg1);
+    border-top: 1px solid var(--line);
   }
   .vp-url-row {
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 6px;
     align-items: center;
     margin-bottom: 8px;
   }
   .vp-url-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     flex-shrink: 0;
-    font-size: 9px;
   }
   .vp-url-text {
-    font-size: 11px;
-    min-width: 0;
+    font-size: 13px;
     flex: 1;
-    white-space: nowrap;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--dim);
   }
   .vp-copy-url-btn {
     flex-shrink: 0;
-    padding: 5px 10px;
-    font-size: 11px;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    min-height: 32px;
   }
   .vp-hint-row {
-    font-size: 11px;
-    line-height: 1.4;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--dim);
   }
 
   /* ======================================================
@@ -4255,53 +4353,49 @@ img {
     font-size: 26px;
   }
 
-  /* Cards even more compact */
+  /* Cards stay clean and readable */
   .channel-card {
-    padding: 12px;
+    padding: 14px;
   }
   .card-logo-wrap-play {
-    height: 60px;
+    height: 70px;
   }
   .card-channel-name {
-    font-size: 13px;
+    font-size: 15px;
+    font-weight: 700;
   }
   .btn-card-action {
-    padding: 4px 7px;
-    font-size: 11px;
+    padding: 6px 10px;
+    font-size: 12.5px;
+    min-height: 34px;
   }
 
-  /* VJS: ultra-compact control bar */
+  /* VJS control bar: compact but comfortable to touch */
   .vjs-maxplayer-theme .vjs-control-bar {
-    height: 40px;
-    padding: 0 2px;
+    height: 46px !important;
+    padding: 0 4px !important;
   }
   .vjs-maxplayer-theme .vjs-button {
-    min-width: 36px;
-    width: 36px;
+    min-width: 40px !important;
+    width: 40px !important;
   }
   .vjs-maxplayer-theme .vjs-big-play-button {
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 20px;
-  }
-  /* Hide time display to save bar space on tiny phones */
-  .vjs-maxplayer-theme .vjs-time-control {
-    display: none;
+    width: 54px !important;
+    height: 54px !important;
+    line-height: 54px !important;
+    font-size: 22px !important;
   }
 
-  /* Player header: hide logo, tighten up */
-  .vp-header-logo-wrap {
-    display: none;
-  }
+  /* Player header */
   .vp-channel-title {
-    font-size: 13px;
+    font-size: 15px;
     max-width: calc(100vw - 70px);
   }
 
   .cat-pill {
-    font-size: 11px;
-    padding: 4px 10px;
+    font-size: 12.5px;
+    padding: 6px 12px;
+    min-height: 34px;
   }
 }
 
