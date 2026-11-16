@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0A0A0C">
+  <meta name="description" content="MaxPlayer M3U Playlist Creator — Free online tool to create, edit, organize, and download custom .m3u IPTV and media playlists with live logo preview.">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MaxPlayer">
+  <meta property="og:title" content="M3U Playlist Creator — MaxPlayer">
+  <meta property="og:description" content="Create, customize, and download .m3u IPTV playlists with live logo preview and instant M3U file generation.">
+  <meta property="og:image" content="assets/phone/grid-movies.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="M3U Playlist Creator — MaxPlayer">
+  <meta name="twitter:description" content="Create, customize, and download .m3u IPTV playlists with live logo preview and instant M3U file generation.">
+
+  <title>M3U Playlist Creator — MaxPlayer</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Video.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@8/dist/video-js.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="ambient ambient-three"></div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MaxPlayer home">
+      <span class="brand-mark"><span></span><span></span><span></span></span>
+      <span>MAX<span class="accent">PLAYER</span></span>
+    </a>
+    <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#screens">Screenshots</a>
+      <a href="index.html#features">Features</a>
+      <a href="index.html#download">Download</a>
+      <a href="playlist-creator.html" class="nav-active">M3U Creator</a>
+      <a href="https://github.com/mr-bipolar/maxPlayer-iptv" target="_blank" rel="noopener noreferrer">Source ↗</a>
+    </nav>
+    <a class="header-cta" href="index.html#download">Get MaxPlayer <span>↗</span></a>
+  </header>
+
+  <main class="section-wrap creator-main">
+    <!-- Header Hero -->
+    <header class="creator-hero">
+      <div class="eyebrow"><span class="pulse"></span> FREE IPTV TOOL</div>
+      <h1>Create <span class="gradient-text">.m3u Playlist.</span></h1>
+      <p class="creator-lead">Build custom M3U playlists for MaxPlayer, Android TV, or any media player. Add channel details, preview logos in real time, organize your channels, and download your ready-to-play <code>.m3u</code> file.</p>
+      
+      <div class="creator-toolbar-quick">
+        <button type="button" class="tool-btn" id="btnLoadExample">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Load Open Demo Channel
+        </button>
+        <button type="button" class="tool-btn" id="btnImportUrlTrigger">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          Import from URL
+        </button>
+        <button type="button" class="tool-btn" id="btnImportM3UTrigger">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Import .m3u File
+        </button>
+        <input type="file" id="fileInputM3U" accept=".m3u,.m3u8,text/plain" style="display: none;">
+        <button type="button" class="tool-btn text-danger" id="btnClearAll">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear All
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Form Section -->
+    <section class="creator-form-section">
+      <div class="creator-card form-card">
+        <div class="card-header">
+          <div class="card-header-info">
+            <span class="card-tag" id="formModeTag">Channel Details</span>
+            <h2 id="formHeading">Add New Channel</h2>
+            <p>Enter channel attributes according to the M3U Plus standard (#EXTINF).</p>
+          </div>
+          <span class="header-badge" id="editingBadge" style="display: none;">Editing Channel</span>
+        </div>
+
+        <form id="channelForm" novalidate>
+          <input type="hidden" id="editChannelIndex" value="-1">
+
+          <div class="form-grid">
+            <!-- Channel Name (Required) -->
+            <div class="form-group col-span-2">
+              <label for="channelName" class="form-label">
+                Channel Name <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="channelName" 
+                class="form-input" 
+                placeholder="e.g. Big Buck Bunny (1080p) or Open News HD" 
+                required 
+                autocomplete="off">
+              <span class="field-hint">The title displayed in your media player channel list</span>
+            </div>
+
+            <!-- Category / group-title -->
+            <div class="form-group">
+              <label for="channelCategory" class="form-label">
+                Category <span class="attr-tag">group-title</span>
+              </label>
+              <input 
+                type="text" 
+                id="channelCategory" 
+                class="form-input" 
+                list="categorySuggestions" 
+                placeholder="e.g. Animation, News, Sports" 
+                autocomplete="off">
+              <datalist id="categorySuggestions">
+                <option value="News"></option>
+                <option value="Sports"></option>
+                <option value="Movies"></option>
+                <option value="Entertainment"></option>
+                <option value="Music"></option>
+                <option value="Animation"></option>
+                <option value="Documentary"></option>
+                <option value="Kids"></option>
+                <option value="General"></option>
+                <option value="Live Streams"></option>
+                <option value="Radio"></option>
+              </datalist>
+              <span class="field-hint">Groups channels into categories in MaxPlayer</span>
+            </div>
+
+            <!-- tvg-id -->
+            <div class="form-group">
+              <label for="channelTvgId" class="form-label">
+                EPG ID <span class="attr-tag">tvg-id</span>
+              </label>
+              <input 
+                type="text" 
+                id="channelTvgId" 
+                class="form-input font-mono" 
+                placeholder="e.g. BigBuckBunny.open@HD" 
+                autocomplete="off">
+              <span class="field-hint">Electronic Program Guide identifier</span>
+            </div>
+
+            <!-- Image URL (tvg-logo) with Live Preview -->
+            <div class="form-group col-span-2">
+              <label for="channelLogo" class="form-label">
+                Channel Logo URL <span class="attr-tag">tvg-logo</span>
+              </label>
+              <div class="logo-input-row">
+                <div class="logo-input-wrap">
+                  <input 
+                    type="url" 
+                    id="channelLogo" 
+                    class="form-input font-mono" 
+                    placeholder="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg" 
+                    autocomplete="off">
+                  <span class="field-hint">Direct link to PNG, JPG, WEBP, or SVG channel icon</span>
+                </div>
+
+                <!-- Live Image Preview Box -->
+                <div class="logo-preview-container" id="logoPreviewContainer">
+                  <div class="preview-box" id="logoPreviewBox">
+                    <img id="logoPreviewImg" src="" alt="Channel logo preview" style="display: none;">
+                    <div class="preview-placeholder" id="previewPlaceholder">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                      <span>No Logo</span>
+                    </div>
+                    <div class="preview-error" id="previewError" style="display: none;">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                      <span>Failed</span>
+                    </div>
+                  </div>
+                  <span class="preview-label">Live Preview</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Channel URL / Stream URL (Required) -->
+            <div class="form-group col-span-2">
+              <label for="channelUrl" class="form-label">
+                Stream URL <span class="required">*</span>
+              </label>
+              <input 
+                type="url" 
+                id="channelUrl" 
+                class="form-input font-mono" 
+                placeholder="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" 
+                required 
+                autocomplete="off">
+              <span class="field-hint">Supports HLS (.m3u8), MP4, MKV, DASH (.mpd), TS, or RTSP streams</span>
+            </div>
+          </div>
+
+          <!-- Form Buttons -->
+          <div class="form-actions">
+            <button type="submit" class="button button-primary" id="btnSubmitChannel">
+              <span id="btnSubmitIcon">＋</span>
+              <span id="btnSubmitText">Add Channel to Playlist</span>
+            </button>
+            <button type="button" class="button button-quiet" id="btnResetForm">
+              Clear Inputs
+            </button>
+            <button type="button" class="button button-quiet" id="btnCancelEdit" style="display: none;">
+              Cancel Edit
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Playlist Controls & Actions Bar -->
+    <section class="playlist-header-bar" id="playlistSection">
+      <div class="playlist-summary">
+        <div class="summary-stat">
+          <span class="stat-number" id="statChannelCount">0</span>
+          <span class="stat-label">Channels</span>
+        </div>
+        <div class="summary-stat">
+          <span class="stat-number" id="statCategoryCount">0</span>
+          <span class="stat-label">Categories</span>
+        </div>
+      </div>
+
+      <!-- File Name & Primary Download Action -->
+      <div class="download-cluster">
+        <div class="filename-input-wrap">
+          <label for="playlistFileName" class="sr-only">Playlist File Name</label>
+          <span class="filename-prefix">File:</span>
+          <input type="text" id="playlistFileName" class="filename-input" value="playlist.m3u" spellcheck="false">
+        </div>
+        <button type="button" class="button button-primary download-m3u-btn" id="btnDownloadM3U">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Download .m3u</span>
+        </button>
+        <button type="button" class="button button-quiet" id="btnCopyM3U" title="Copy raw M3U text to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span>Copy</span>
+        </button>
+        <button type="button" class="button button-quiet" id="btnTogglePreview" title="Toggle raw M3U syntax view">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          <span id="previewToggleText">View Code</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Raw M3U Live Code Inspector (Collapsible) -->
+    <section class="raw-code-section" id="rawCodeSection" style="display: none;">
+      <div class="creator-card raw-code-card">
+        <div class="raw-code-header">
+          <div class="code-title">
+            <span class="code-dot red"></span>
+            <span class="code-dot yellow"></span>
+            <span class="code-dot green"></span>
+            <span>Generated .m3u Playlist Output</span>
+          </div>
+          <button type="button" class="tool-btn-sm" id="btnCopyRawCode">Copy Text</button>
+        </div>
+        <pre class="raw-code-block"><code id="rawCodeText">#EXTM3U</code></pre>
+      </div>
+    </section>
+
+    <!-- Filter & Search Bar -->
+    <div class="grid-filter-bar" id="gridFilterBar">
+      <div class="search-input-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="filterInput" class="filter-input" placeholder="Search channels by name, category, or tvg-id...">
+        <button type="button" id="clearFilterBtn" class="clear-filter-btn" style="display: none;">✕</button>
+      </div>
+      <div class="category-filter-pills" id="categoryFilterPills">
+        <button type="button" class="cat-pill active" data-category="all">All</button>
+      </div>
+    </div>
+
+    <!-- Channel Grid List -->
+    <section class="channel-grid-section">
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon-wrap">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
+        </div>
+        <h3>No channels added yet</h3>
+        <p>Use the form above to add your first channel, or click the button below to load an example channel.</p>
+        <button type="button" class="button button-quiet" id="btnLoadExampleEmpty">
+          Load Open Demo Channel (Big Buck Bunny)
+        </button>
+      </div>
+
+      <!-- Channels Grid -->
+      <div class="channel-grid" id="channelGrid">
+        <!-- Channel Cards dynamically injected here -->
+      </div>
+    </section>
+
+    <!-- Guide & Format Specifications Card -->
+    <section class="format-guide-section">
+      <div class="creator-card guide-card">
+        <h3>About the M3U Plus Format</h3>
+        <p>MaxPlayer supports industry standard <strong>#EXTM3U</strong> playlists with extended metadata tags:</p>
+        <div class="guide-table-wrap">
+          <table class="guide-table">
+            <thead>
+              <tr>
+                <th>Attribute</th>
+                <th>Standard Tag</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Channel Name</strong></td>
+                <td><code>Title</code></td>
+                <td>Display name shown in player interfaces</td>
+                <td><code>Big Buck Bunny (1080p)</code></td>
+              </tr>
+              <tr>
+                <td><strong>Logo URL</strong></td>
+                <td><code>tvg-logo="..."</code></td>
+                <td>Web address of channel icon or banner</td>
+                <td><code>https://.../BigBuckBunny.jpg</code></td>
+              </tr>
+              <tr>
+                <td><strong>Category</strong></td>
+                <td><code>group-title="..."</code></td>
+                <td>Group or folder for sorting channels</td>
+                <td><code>Animation / Demo</code></td>
+              </tr>
+              <tr>
+                <td><strong>EPG ID</strong></td>
+                <td><code>tvg-id="..."</code></td>
+                <td>Links channel to electronic program guide schedule</td>
+                <td><code>BigBuckBunny.open@HD</code></td>
+              </tr>
+              <tr>
+                <td><strong>Stream URL</strong></td>
+                <td><code>Direct Link</code></td>
+                <td>Direct HLS/M3U8, MPD, MP4, or TS streaming source</td>
+                <td><code>https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal: Import from URL or Paste Text -->
+  <div class="creator-modal" id="importUrlModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalImportTitle">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <span class="card-tag">ONLINE PLAYLIST</span>
+          <h3 id="modalImportTitle">Import Playlist from URL</h3>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseImportModal" aria-label="Close modal">✕</button>
+      </div>
+      <p class="modal-desc">Enter the web address of any public <code>.m3u</code> or <code>.m3u8</code> playlist to load its channels directly into your editor.</p>
+
+      <form id="importUrlForm">
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label for="importUrlInput" class="form-label">Playlist Web URL</label>
+          <input 
+            type="url" 
+            id="importUrlInput" 
+            class="form-input font-mono" 
+            placeholder="https://example.com/playlist.m3u" 
+            autocomplete="off">
+          <span class="field-hint">e.g. GitHub raw playlist link, IPTV URL, or stream provider URL</span>
+        </div>
+
+        <div class="modal-presets">
+          <span class="presets-label">Quick Public Samples:</span>
+          <button type="button" class="preset-pill-btn" data-url="https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_animation.m3u">IPTV-org Animation</button>
+          <button type="button" class="preset-pill-btn" data-url="https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_classic.m3u">IPTV-org Classic</button>
+        </div>
+
+        <!-- Optional Direct Text Paste Option (for when remote servers block CORS) -->
+        <details class="paste-text-accordion" id="pasteAccordion">
+          <summary>Or paste raw M3U text directly</summary>
+          <div class="paste-text-wrap">
+            <textarea id="importPasteTextarea" class="form-input font-mono paste-textarea" rows="4" placeholder="#EXTM3U&#10;#EXTINF:-1 tvg-id=&quot;sample&quot;, Sample Channel&#10;https://..."></textarea>
+          </div>
+        </details>
+
+        <div class="modal-footer-actions">
+          <button type="submit" class="button button-primary" id="btnExecuteImportUrl">
+            <span id="importUrlBtnSpinner" class="spinner" style="display: none;"></span>
+            <span id="importUrlBtnText">Fetch &amp; Import</span>
+          </button>
+          <button type="button" class="button button-quiet" id="btnCancelImportModal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Video Player Modal -->
+  <div class="vp-overlay" id="vpOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="vpChannelTitle">
+    <div class="vp-modal">
+
+      <!-- Player Header -->
+      <div class="vp-header">
+        <div class="vp-header-info">
+          <div class="vp-header-logo-wrap" id="vpHeaderLogo" style="display: none;">
+            <img id="vpHeaderLogoImg" src="" alt="">
+          </div>
+          <div>
+            <div class="vp-now-playing-label">
+              <span class="vp-live-dot"></span>
+              NOW PLAYING
+            </div>
+            <h2 class="vp-channel-title" id="vpChannelTitle">Channel Name</h2>
+            <span class="vp-category-badge" id="vpCategoryBadge"></span>
+          </div>
+        </div>
+        <button type="button" class="vp-close-btn" id="vpCloseBtn" aria-label="Close player">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <!-- Video.js Player Container -->
+      <div class="vp-player-wrap">
+        <video
+          id="vjs-player"
+          class="video-js vjs-maxplayer-theme vjs-big-play-centered"
+          controls
+          preload="auto"
+          playsinline
+          crossorigin="anonymous">
+        </video>
+        <!-- Loading State Overlay -->
+        <div class="vp-loading-state" id="vpLoadingState">
+          <div class="vp-spinner-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <p>Connecting to stream…</p>
+        </div>
+        <!-- Error State Overlay -->
+        <div class="vp-error-state" id="vpErrorState" style="display: none;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <p id="vpErrorMsg">Unable to play this stream.</p>
+          <span class="vp-error-hint">The stream may require a native player. Try opening in MaxPlayer on Android.</span>
+        </div>
+      </div>
+
+      <!-- Subtitle / Caption Panel (collapsed by default) -->
+      <div class="vp-subtitle-panel" id="vpSubtitlePanel">
+        <div class="vp-subtitle-header" id="vpSubtitleToggle" role="button" tabindex="0" aria-expanded="false" aria-controls="vpSubtitleBody">
+          <div class="vp-subtitle-header-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M7 12h2l2 2 2-2h2"></path></svg>
+            <span>Subtitles / Captions</span>
+            <span class="vp-subtitle-active-badge" id="vpSubtitleActiveBadge" style="display:none;">ON</span>
+          </div>
+          <svg class="vp-subtitle-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="vp-subtitle-body" id="vpSubtitleBody" style="display:none;">
+          <!-- Track Source Options -->
+          <div class="vp-subtitle-source-tabs">
+            <button type="button" class="vp-sub-tab active" data-tab="file">Upload .vtt / .srt</button>
+            <button type="button" class="vp-sub-tab" data-tab="url">From URL</button>
+            <button type="button" class="vp-sub-tab" data-tab="off">Off</button>
+          </div>
+
+          <!-- File upload tab -->
+          <div class="vp-sub-tab-panel" id="vpSubTabFile">
+            <label class="vp-sub-upload-label" for="vpSubFileInput">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <span id="vpSubFileLabel">Choose subtitle file (.vtt, .srt)</span>
+            </label>
+            <input type="file" id="vpSubFileInput" accept=".vtt,.srt,.ass,.ssa" style="display:none;">
+            <div class="vp-sub-lang-row">
+              <label class="vp-sub-mini-label" for="vpSubLangFile">Language</label>
+              <input type="text" id="vpSubLangFile" class="vp-sub-input-sm" placeholder="en" value="en" maxlength="10">
+              <label class="vp-sub-mini-label" for="vpSubLabelFile">Label</label>
+              <input type="text" id="vpSubLabelFile" class="vp-sub-input-sm" placeholder="English" value="English" maxlength="40">
+            </div>
+            <button type="button" class="button button-primary vp-sub-apply-btn" id="vpSubApplyFile">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              Apply Subtitles
+            </button>
+          </div>
+
+          <!-- URL tab -->
+          <div class="vp-sub-tab-panel" id="vpSubTabUrl" style="display:none;">
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-size:12px;color:var(--dim);" for="vpSubUrlInput">Subtitle URL (.vtt)</label>
+              <input type="url" id="vpSubUrlInput" class="form-input font-mono" style="height:40px;font-size:12.5px;" placeholder="https://example.com/subtitles.vtt">
+            </div>
+            <div class="vp-sub-lang-row">
+              <label class="vp-sub-mini-label" for="vpSubLangUrl">Language</label>
+              <input type="text" id="vpSubLangUrl" class="vp-sub-input-sm" placeholder="en" value="en" maxlength="10">
+              <label class="vp-sub-mini-label" for="vpSubLabelUrl">Label</label>
+              <input type="text" id="vpSubLabelUrl" class="vp-sub-input-sm" placeholder="English" value="English" maxlength="40">
+            </div>
+            <button type="button" class="button button-primary vp-sub-apply-btn" id="vpSubApplyUrl">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              Load Subtitles
+            </button>
+          </div>
+
+          <!-- Off tab -->
+          <div class="vp-sub-tab-panel" id="vpSubTabOff" style="display:none;">
+            <p class="vp-sub-off-hint">Subtitles are currently <strong>off</strong>. Switch to a tab above to add a subtitle track.</p>
+            <button type="button" class="button button-quiet vp-sub-apply-btn" id="vpSubApplyOff">Turn Off / Remove Subtitles</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player Footer Info -->
+      <div class="vp-footer">
+        <div class="vp-url-row">
+          <span class="vp-url-label">STREAM URL</span>
+          <span class="vp-url-text font-mono" id="vpUrlText"></span>
+          <button type="button" class="vp-copy-url-btn" id="vpCopyUrlBtn" title="Copy stream URL">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy URL
+          </button>
+        </div>
+        <div class="vp-hint-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          HLS streams play directly. For best IPTV experience, open with the <strong>MaxPlayer</strong> app.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer section-wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><span></span><span></span><span></span></span>
+      <span>MAX<span class="accent">PLAYER</span></span>
+    </a>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="playlist-creator.html" class="accent">M3U Creator</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy policy</a>
+      <a href="https://github.com/mr-bipolar/maxPlayer-iptv" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="mailto:support.maxlab@gmail.com">Contact</a>
+    </div>
+    <p>© <span id="year"></span> MaxPlayer. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/video.js@8/dist/video.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@videojs/http-streaming@3/dist/videojs-http-streaming.min.js"></script>
+  <script src="playlist-creator.js"></script>
+</body>
+</html>
